@@ -15,11 +15,18 @@ public class Flocker : MonoBehaviour
 
 	private float speed = 10.0f;
 
+	private Renderer mRenderer;
+	private Renderer Renderer {
+		get {
+			if (mRenderer == null) mRenderer = GetComponent<Renderer>();
+			return mRenderer;
+		}
+	}
     // Start is called before the first frame update
     void Start()
     {
 		faction = FlockerFactionFactory.GetRandomFaction();
-		GetComponent<Renderer>().material = faction.GetMaterial(GetComponent<Renderer>().material);
+		Renderer.material = faction.GetMaterial(Renderer.material);
 
 		// randomize the flocker's speeds so we can see differentitation
 		speed = speed * Random.Range(0.9f, 1.1f);
@@ -52,5 +59,9 @@ public class Flocker : MonoBehaviour
 		// we do not want the force vector to have a scale factor
 		total.Normalize();
 		return total;
+	}
+
+	private void OnDestroy() {
+		faction.Release();
 	}
 }

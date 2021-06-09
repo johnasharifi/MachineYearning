@@ -11,6 +11,9 @@ public class FlockerFaction
 	// serialize this var so we can see it in Unity inspector
 	[SerializeField] private Color mColor;
 
+	// not disposed. Assume that disposal is needed
+	bool disposed = false;
+
 	private Material mMaterial;
 
 	public Color Color {
@@ -82,6 +85,16 @@ public class FlockerFaction
 
 			// fallback - only get to here if we disabled randomInit and didn't define a process for setting faction-faction forces
 			return default(float);
+		}
+	}
+	
+	/// <summary>
+	/// Release the FlockerFaction's resources
+	/// </summary>
+	public void Release() {
+		if (!disposed) {
+			disposed = true;
+			GameObject.Destroy(mMaterial);
 		}
 	}
 }

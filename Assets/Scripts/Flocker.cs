@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class Flocker : MonoBehaviour
 {
+	// set in Start()
+	[SerializeField] private FlockerFaction faction;
+	
 	// set once at static time
 	private static readonly HashSet<Flocker> flock = new HashSet<Flocker>();
 
@@ -12,9 +15,19 @@ public class Flocker : MonoBehaviour
 
 	private float speed = 10.0f;
 
+	private Renderer mRenderer;
+	private Renderer Renderer {
+		get {
+			if (mRenderer == null) mRenderer = GetComponent<Renderer>();
+			return mRenderer;
+		}
+	}
     // Start is called before the first frame update
     void Start()
     {
+		faction = FlockerFactionFactory.GetRandomFaction();
+		Renderer.material = faction.GetMaterial(Renderer.material);
+
 		// randomize the flocker's speeds so we can see differentitation
 		speed = speed * Random.Range(0.9f, 1.1f);
 		flock.Add(this);
@@ -28,7 +41,7 @@ public class Flocker : MonoBehaviour
     }
 
 	Vector3 GetForceVector() {
-		Vector3 total = new Vector3();
+		Vector3 total = Vector3.zero;
 
 		int adjacentCount = 0;
 
@@ -36,14 +49,19 @@ public class Flocker : MonoBehaviour
 			Vector3 diff = flocker.transform.position - transform.position;
 			if (diff.sqrMagnitude < flockDistanceThreshold * flockDistanceThreshold)
 				adjacentCount++;
-			total += (flocker.transform.position - transform.position);
+			// push / pull depending upon how this flocker's forces / rules define behavior toward that flocker's faction
+			total += (flocker.transform.position - transform.position) * faction.GetAffinityFor(flocker.faction);
 		}
 
 		total /= flock.Count;
-		// when too few flock friends within range, move toward them. else move away
+
 		total = total * (adjacentCount > flockCountThreshold ? -1 : 1);
 		// we do not want the force vector to have a scale factor
 		total.Normalize();
 		return total;
+	}
+
+	private void OnDestroy() {
+		faction.Release();
 	}
 }

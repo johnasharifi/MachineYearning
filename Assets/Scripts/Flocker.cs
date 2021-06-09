@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class Flocker : MonoBehaviour
 {
-	[SerializeField] private FlockerForces forces = new FlockerForces();
 	[SerializeField] private FlockerFaction faction;
 
 	// set once at static time
@@ -42,7 +41,7 @@ public class Flocker : MonoBehaviour
 			if (diff.sqrMagnitude < flockDistanceThreshold * flockDistanceThreshold)
 				adjacentCount++;
 			// push / pull depending upon how this flocker's forces / rules define behavior toward that flocker's faction
-			total += (flocker.transform.position - transform.position) * forces[flocker.faction];
+			total += (flocker.transform.position - transform.position) * faction[flocker.faction];
 		}
 
 		total /= flock.Count;

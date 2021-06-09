@@ -50,6 +50,8 @@ public class Flocker : MonoBehaviour
     }
 
 	Vector3 GetForceVector() {
+		const int zeroPreference = 10;
+
 		Vector3 total = Vector3.zero;
 	
 		int adjacentCount = 0;
@@ -67,7 +69,8 @@ public class Flocker : MonoBehaviour
 			}
 		}
 
-		total /= flock.Count;
+		// weight the flocking behavior to move toward (0,0,0)
+		total /= (flock.Count + zeroPreference);
 		
 		// we do not want the force vector to have a scale factor
 		total.Normalize();

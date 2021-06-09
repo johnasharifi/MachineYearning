@@ -56,6 +56,8 @@ public class Flocker : MonoBehaviour
 	
 		int adjacentCount = 0;
 
+		// TODO allow Flockers to "capture" other Flockers
+
 		foreach (Flocker flocker in flock) {
 			Vector3 diff = flocker.transform.position - transform.position;
 			if (diff.sqrMagnitude < flockDistanceThreshold * flockDistanceThreshold) {

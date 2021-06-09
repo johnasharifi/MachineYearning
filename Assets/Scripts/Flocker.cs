@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class Flocker : MonoBehaviour
 {
+	[SerializeField] private FlockerForces forces = new FlockerForces();
+	[SerializeField] private FlockerFaction faction = new FlockerFaction();
+
 	// set once at static time
 	private static readonly HashSet<Flocker> flock = new HashSet<Flocker>();
 
@@ -36,11 +39,12 @@ public class Flocker : MonoBehaviour
 			Vector3 diff = flocker.transform.position - transform.position;
 			if (diff.sqrMagnitude < flockDistanceThreshold * flockDistanceThreshold)
 				adjacentCount++;
-			total += (flocker.transform.position - transform.position);
+			// push / pull depending upon how this flocker's forces / rules define behavior toward that flocker's faction
+			total += (flocker.transform.position - transform.position) * forces[flocker.faction];
 		}
 
 		total /= flock.Count;
-		// when too few flock friends within range, move toward them. else move away
+
 		total = total * (adjacentCount > flockCountThreshold ? -1 : 1);
 		// we do not want the force vector to have a scale factor
 		total.Normalize();

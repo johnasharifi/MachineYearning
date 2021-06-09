@@ -8,6 +8,19 @@ using UnityEngine;
 [System.Serializable]
 public class FlockerFaction
 {
+	// serialize this var so we can see it in Unity inspector
+	[SerializeField] private Color mColor;
+
+	public Color Color {
+		set {
+			mColor = value;
+		}
+		get {
+			return mColor;
+		}
+
+	}
+
 	// define affinities of this faction for other factions
 	private readonly Dictionary<FlockerFaction, float> affinities = new Dictionary<FlockerFaction, float>();
 	
@@ -57,9 +70,13 @@ public static class FlockerFactionFactory {
 	const int maxFactionCount = 10;
 	private static readonly List<FlockerFaction> factionsManifest = new List<FlockerFaction>();
 
+	/// <summary>
+	/// Get a new or existing faction
+	/// </summary>
+	/// <returns>Gets a faction. Do not call before Application isPlaying. Faction proportions are not guaranteed to be 1/n</returns>
 	public static FlockerFaction GetRandomFaction() {
 		if (factionsManifest.Count < maxFactionCount) {
-			FlockerFaction faction = new FlockerFaction { id = factionsManifest.Count + 1 };
+			FlockerFaction faction = new FlockerFaction { id = factionsManifest.Count + 1, Color = new Color(Random.value, Random.value, Random.value, 1.0f) };
 			factionsManifest.Add(faction);
 		}
 

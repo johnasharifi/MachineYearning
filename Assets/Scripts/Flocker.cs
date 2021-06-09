@@ -4,8 +4,9 @@ using UnityEngine;
 
 public class Flocker : MonoBehaviour
 {
+	// set in Start()
 	[SerializeField] private FlockerFaction faction;
-
+	
 	// set once at static time
 	private static readonly HashSet<Flocker> flock = new HashSet<Flocker>();
 
@@ -18,6 +19,7 @@ public class Flocker : MonoBehaviour
     void Start()
     {
 		faction = FlockerFactionFactory.GetRandomFaction();
+		GetComponent<Renderer>().material.SetColor("_Color", faction.Color);
 
 		// randomize the flocker's speeds so we can see differentitation
 		speed = speed * Random.Range(0.9f, 1.1f);
@@ -32,7 +34,7 @@ public class Flocker : MonoBehaviour
     }
 
 	Vector3 GetForceVector() {
-		Vector3 total = new Vector3();
+		Vector3 total = Vector3.zero;
 
 		int adjacentCount = 0;
 

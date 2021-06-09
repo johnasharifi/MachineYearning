@@ -5,7 +5,7 @@ using UnityEngine;
 public class Flocker : MonoBehaviour
 {
 	[SerializeField] private FlockerForces forces = new FlockerForces();
-	[SerializeField] private FlockerFaction faction = new FlockerFaction();
+	[SerializeField] private FlockerFaction faction;
 
 	// set once at static time
 	private static readonly HashSet<Flocker> flock = new HashSet<Flocker>();
@@ -18,6 +18,8 @@ public class Flocker : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+		faction = FlockerFactionFactory.GetRandomFaction();
+
 		// randomize the flocker's speeds so we can see differentitation
 		speed = speed * Random.Range(0.9f, 1.1f);
 		flock.Add(this);

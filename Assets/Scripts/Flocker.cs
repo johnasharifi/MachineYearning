@@ -11,10 +11,9 @@ public class Flocker : MonoBehaviour
 	private static readonly HashSet<Flocker> flock = new HashSet<Flocker>();
 
 	private float flockDistanceThreshold = 10.0f;
-	private int flockCountThreshold = 10;
-
-	const float baseMoveSpeed = 5.0f;
-	const float baseRotationSpeed = 50.0f;
+	
+	const float baseMoveSpeed = 10.0f;
+	const float baseRotationSpeed = 5.0f;
 	private float MoveSpeed {
 		get {
 			return faction.MoveSpeed * baseMoveSpeed;
@@ -52,21 +51,24 @@ public class Flocker : MonoBehaviour
 
 	Vector3 GetForceVector() {
 		Vector3 total = Vector3.zero;
-
+	
 		int adjacentCount = 0;
 
 		foreach (Flocker flocker in flock) {
 			Vector3 diff = flocker.transform.position - transform.position;
 			if (diff.sqrMagnitude < flockDistanceThreshold * flockDistanceThreshold) {
 				adjacentCount++;
+
+				// when nearby, push / pull depending upon how this flocker's faction's affinity for that flocker's faction
+				total += diff * faction.GetAffinityFor(flocker.faction);
+			} else {
+				// equivalent to diff * 1.0; aka flock toward that unit
+				total += (diff);
 			}
-			// push / pull depending upon how this flocker's forces / rules define behavior toward that flocker's faction
-			total += (flocker.transform.position - transform.position) * faction.GetAffinityFor(flocker.faction);
 		}
 
 		total /= flock.Count;
-
-		total = total * (adjacentCount > flockCountThreshold ? -1 : 1);
+		
 		// we do not want the force vector to have a scale factor
 		total.Normalize();
 		return total;

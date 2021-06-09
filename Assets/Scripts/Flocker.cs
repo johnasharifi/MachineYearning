@@ -19,7 +19,7 @@ public class Flocker : MonoBehaviour
     void Start()
     {
 		faction = FlockerFactionFactory.GetRandomFaction();
-		GetComponent<Renderer>().material.SetColor("_Color", faction.Color);
+		GetComponent<Renderer>().material = faction.GetMaterial(GetComponent<Renderer>().material);
 
 		// randomize the flocker's speeds so we can see differentitation
 		speed = speed * Random.Range(0.9f, 1.1f);

@@ -11,6 +11,8 @@ public class FlockerFaction
 	// serialize this var so we can see it in Unity inspector
 	[SerializeField] private Color mColor;
 
+	private Material mMaterial;
+
 	public Color Color {
 		set {
 			mColor = value;
@@ -46,6 +48,24 @@ public class FlockerFaction
 	/// <returns>A value which defines affinity (+) or hostility (-) of this faction, to the other faction</returns>
 	public float GetAffinityFor(FlockerFaction other) {
 		return this[other];
+	}
+
+	/// <summary>
+	/// Get this faction's material
+	/// </summary>
+	/// <param name="orig">Original material to spawn from</param>
+	/// <returns>The faction's material</returns>
+	public Material GetMaterial(Material orig) {
+		if (mMaterial != null) return mMaterial;
+		if (orig != null) {
+			mMaterial = new Material(orig);
+			mMaterial.SetColor("_Color", mColor);
+			return mMaterial;
+		}
+
+		// panic
+		Debug.LogErrorFormat("Warning: you reached an undefined Material case in {0}", new System.Diagnostics.StackFrame().GetMethod());
+		return default;
 	}
 
 	/// <summary>

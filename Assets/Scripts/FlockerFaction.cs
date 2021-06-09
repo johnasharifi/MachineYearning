@@ -15,6 +15,32 @@ public class FlockerFaction
 	bool disposed = false;
 
 	private Material mMaterial;
+	
+	[SerializeField] private float mMoveSpeed;
+	/// <summary>
+	/// Normalized move speed for this faction. In range [0,1]
+	/// </summary>
+	public float MoveSpeed {
+		set {
+			mMoveSpeed = Mathf.Clamp01(value);
+		}
+		get {
+			return mMoveSpeed;
+		}
+	}
+
+	[SerializeField] private float mRotationSpeed;
+	/// <summary>
+	/// Normalized rotation speed for this faction. In range [0,1]
+	/// </summary>
+	public float RotationSpeed {
+		set {
+			mRotationSpeed = Mathf.Clamp01(value);
+		}
+		get {
+			return mRotationSpeed;
+		}
+	}
 
 	public Color Color {
 		set {
@@ -23,9 +49,8 @@ public class FlockerFaction
 		get {
 			return mColor;
 		}
-
 	}
-
+	
 	// define affinities of this faction for other factions
 	private readonly Dictionary<FlockerFaction, float> affinities = new Dictionary<FlockerFaction, float>();
 	
@@ -36,7 +61,7 @@ public class FlockerFaction
 	[SerializeField] int mID;
 
 	// by default, faction-faction feelings should be random
-	bool randomForceInit = true;
+	bool randomize = true;
 
 	public int id {
 		set {
@@ -78,7 +103,7 @@ public class FlockerFaction
 	/// <returns>A value which defines affinity (+) or hostility (-) of this faction, to the other faction</returns>
 	private float this[FlockerFaction other] {
 		get {
-			if (randomForceInit && !affinities.ContainsKey(other)) {
+			if (randomize && !affinities.ContainsKey(other)) {
 				affinities[other] = Random.Range(minRange, maxRange);
 			}
 			if (affinities.ContainsKey(other)) return affinities[other];
@@ -109,7 +134,12 @@ public static class FlockerFactionFactory {
 	/// <returns>Gets a faction. Do not call before Application isPlaying. Faction proportions are not guaranteed to be 1/n</returns>
 	public static FlockerFaction GetRandomFaction() {
 		if (factionsManifest.Count < maxFactionCount) {
-			FlockerFaction faction = new FlockerFaction { id = factionsManifest.Count + 1, Color = new Color(Random.value, Random.value, Random.value, 1.0f) };
+			FlockerFaction faction = new FlockerFaction {
+				id = factionsManifest.Count + 1,
+				Color = new Color(Random.value, Random.value, Random.value, 1.0f),
+				MoveSpeed = Random.Range(0.2f, 1.0f),
+				RotationSpeed = Random.Range(0.2f, 1.0f)
+				};
 			factionsManifest.Add(faction);
 		}
 

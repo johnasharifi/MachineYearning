@@ -41,7 +41,7 @@ public class Flocker : MonoBehaviour
 			if (diff.sqrMagnitude < flockDistanceThreshold * flockDistanceThreshold)
 				adjacentCount++;
 			// push / pull depending upon how this flocker's forces / rules define behavior toward that flocker's faction
-			total += (flocker.transform.position - transform.position) * faction[flocker.faction];
+			total += (flocker.transform.position - transform.position) * faction.GetAffinityFor(flocker.faction);
 		}
 
 		total /= flock.Count;

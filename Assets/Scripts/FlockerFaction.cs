@@ -27,11 +27,20 @@ public class FlockerFaction
 	}
 
 	/// <summary>
+	/// Public-facing API for affinity lookup
+	/// </summary>
+	/// <param name="other">Another faction</param>
+	/// <returns>A value which defines affinity (+) or hostility (-) of this faction, to the other faction</returns>
+	public float GetAffinityFor(FlockerFaction other) {
+		return this[other];
+	}
+
+	/// <summary>
 	/// Defines how this faction flocks with another faction
 	/// </summary>
 	/// <param name="other">Another faction</param>
 	/// <returns>A value which defines affinity (+) or hostility (-) of this faction, to the other faction</returns>
-	public float this[FlockerFaction other] {
+	private float this[FlockerFaction other] {
 		get {
 			if (randomForceInit && !affinities.ContainsKey(other)) {
 				affinities[other] = Random.Range(minRange, maxRange);
